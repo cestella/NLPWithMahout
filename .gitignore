@@ -6,3 +6,7 @@
 *.ear
 target
 .metadata
+.idea
+NLPWithMahout.iml
+NLPWithMahout.ipr
+NLPWithMahout.iws
