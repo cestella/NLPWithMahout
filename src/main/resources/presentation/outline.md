@@ -6,6 +6,6 @@ Outline of Talk
  * Converting SequenceFiles to Vectors
 * Algorithms
  * Clustering
-    * LDA
+   * LDA
  * Classification
-    * Random Forests
+   * Random Forests
