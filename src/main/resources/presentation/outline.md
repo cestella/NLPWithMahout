@@ -2,10 +2,10 @@ Outline of Talk
 ===============
 
 * Ingesting Text
- * Converting to SequenceFiles
- * Converting SequenceFiles to Vectors
+  * Converting to SequenceFiles
+  * Converting SequenceFiles to Vectors
 * Algorithms
- * Clustering
+  * Clustering
    * LDA
- * Classification
-   * Random Forests
+  * Classification
+    * Random Forests
