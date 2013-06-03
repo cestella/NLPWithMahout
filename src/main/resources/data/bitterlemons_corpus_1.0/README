@@ -1,0 +1,97 @@
+=======================
+The Bitterlemons Corpus
+=======================
+
+| Version: 1.0
+| Release Date: January 25, 2007
+
+.. contents::
+
+Introduction
+============
+
+The bitterlemons corpus consists of the articles published on the
+bitterlemons website < http://www.bitterlemons.org> from late 2001 to
+early 2005.  The website is set up to "contribute to mutual
+understanding [between Palestinians and Israelis] through the open
+exchange of ideas." (See
+<http://www.bitterlemons.org/about/about.html>) Every week an issue
+about the Israeli-Palestinian conflict is selected for discussion
+(e.g., "Disengagement: unilateral or coordinated?"), and a Palestinian
+editor and an Israeli editor contribute one article addressing the
+issue.  In addition, the Israeli and Palestinian editors invite one
+Israeli and one Palestinian to express their views on the issue
+(sometimes in the form of an interview), resulting in four articles in
+an weekly edition.  Each article is labeled as written from either a
+Palestinian or an Israeli perspective by the editors.
+
+The bitterlemons corpus was collected by Theresa Wilson and Wei-Hao
+Lin to study the problem of identifying perspectives from which a
+document is written.  More details about their research can be found
+in the following paper,
+
+| @InProceedings{lin06which_side_are_you,
+|   author = 	 {Wei-Hao Lin and Theresa Wilson and Janyce Wiebe and Alexander Hauptmann},
+|   title = 	 {Which Side are You on? Identifying Perspectives at the Document and Sentence Levels},
+|   year = 	 2006,
+|   booktitle = 	 {Proceedings of Tenth Conference on Natural Language Learning ({CoNLL})}
+| }
+
+The two editors of the bitterlemons.org web site agree to release the
+corpus for research purpose.  Please give proper credit to the authors
+and the bitterlemons website when using the corpus.  For any other use
+of the corpus please contact two editors, `Ghassan Khatib
+<mailto:ghassan@bitterlemons.org>`_ and `Yossi Alpher
+<mailto:yossi@bitterlemons.org>`_.
+
+Donwload
+========
+
+The bitterlemon corpus can be downloaded at
+<http://perspective.informedia.cs.cmu.edu/data/bt.1.0.zip> (about 3
+MB).
+
+Corpus
+======
+
+The bitterlemons corpus is organized as follows,
+
+- README 
+- docs/
+- meta/
+- html/
+
+The original articles (in HTML) downloaded from bitterlemons.org are
+stored in html/.  Each HTML file is a weekly issue and contains four
+articles.  Each article is extracted and saved under docs/ after HTML
+tags are removed.  There are a total of 594 articles in docs/.  The
+metadata of the articles (e.g., author, summary, edition number, etc)
+are also removed.  Metadata are saved under meta/, and filenames under
+meta/ match those under docs/.  For example, the file
+``meta/bl010903ed33is2`` contains the metadata of the article
+``docs/bl010903ed33is2``.
+
+There are five fields in the metadata files:
+
+- Field 1: serial numbers starting from 0
+- Field 2: always "0,0"
+- Field 3: always "string"
+- Field 4: types of metadata
+- Field 5 (and the rest of the line): value for the type in Field 4
+
+Viewpoints are either Palestinian or Israeli.
+
+
+Contact
+=======
+
+Please feel free to send your questions and comments about the
+bitterlemons corpus to
+
+| Wei-Hao Lin <whlin+bt at cs.cmu.edu>
+
+| 5000 Forbes Ave
+| Language Technologies Institute
+| Carnegie Mellon University
+| Pittsburgh, PA 15213
+| U.S.A.
