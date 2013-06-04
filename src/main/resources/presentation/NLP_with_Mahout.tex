@@ -1,0 +1,224 @@
+\documentclass{beamer}
+\usepackage{beamerthemesplit}
+\usepackage{multirow}
+\usepackage[T1]{fontenc}
+\usepackage{inconsolata}
+\usepackage{xcolor,colortbl}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usetheme[pageofpages=of,% String used between the current page and the
+                         % total page count.
+          bullet=circle,% Use circles instead of squares for bullets.
+          titleline=true,% Show a line below the frame title.
+          alternativetitlepage=true,% Use the fancy title page.
+          ]{Torino}
+\definecolor{light-green}{RGB}{144,238,144}
+
+\begin{document}
+\author{{\bf Casey Stella}}
+\institute[Hortonworks]{\includegraphics[width=40px,height=17px]{logo}}
+\title{{\bf Natural Language Processing with Mahout}}
+\date{June 26, 2013} 
+
+\frame{\titlepage} 
+
+\frame{\frametitle{Table of Contents}\tableofcontents} 
+
+
+\section{Preliminaries}
+
+\frame{\frametitle{Introduction}
+\begin{itemize}
+\item I'm a Systems Architect at Hortonworks
+\item Prior to this, I
+  \begin{itemize}
+  \item Did data mining on medical data at Explorys using the Hadoop ecosystem
+  \item Did signal processing on seismic data at Ion Geophysical using MapReduce
+  \item Was a graduate student in the Math department at Texas A\&M in algorithmic complexity theory
+  \end{itemize}
+\item I'm going to talk about Natural Language Processing in the Hadoop ecosystem.
+\end{itemize}
+}
+
+\section{Mahout $\to$ An Overview}
+
+\frame{\frametitle{Apache Mahout}
+\begin{itemize}
+\item Apache Mahout is a
+  \begin{itemize}
+  \item Library of stand-alone scalable and distributed machine learning algorithms
+  \item Library of high performance math and primitive collections useful in machine learning 
+  \item Library of primitive distributed statistical and linear algebraic operations useful in machine learning
+  \end{itemize}
+\item The distributed algorithms are able to be run on Hadoop via a set of stand-alone helper utilities as well as providing an API.
+\end{itemize}
+}
+
+\frame{\frametitle{Classes of Algorithms Included}
+\begin{itemize}
+\item Mahout includes distributed algorithms for
+  \begin{itemize}
+  \item Classification
+  \item Clustering
+  \item Pattern Matching/Frequent Itemset Mining
+  \item Recommendation Engines/Collaborative Filtering
+  \end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Overview of Available Algorithms}
+  \begin{tabular}{| l | l | }
+  \hline
+  {\bf Type} & {\bf Algorithm} \\ \hline
+  Linear Algebra & Stochastic Gradient Descent \\ \hline
+  Linear Algebra & Stochastic Singular Value Decomposition\\ \hline
+  \cellcolor{pink}{Classification} & \cellcolor{pink}{Random Forests} \\ \hline
+  \cellcolor{pink}{Classification} & \cellcolor{pink}{Na\"{i}ve Bayesian} \\ \hline
+  \cellcolor{pink}{Classification} & \cellcolor{pink}{Hidden Markov Models} \\ \hline
+  \cellcolor{light-green}{Clustering} & \cellcolor{light-green}{Normal and Fuzzy K-Means} \\ \hline
+  \cellcolor{light-green}{Clustering} & \cellcolor{light-green}{Expectation Maximization} \\ \hline
+  \cellcolor{light-green}{Clustering} & \cellcolor{light-green}{Dirichlet Process Clustering} \\ \hline
+  \cellcolor{light-green}{Clustering} & \cellcolor{light-green}{Latent Dirichlet Allocation} \\ \hline
+  \cellcolor{light-green}{Clustering} & \cellcolor{light-green}{Spectral Clustering} \\ \hline
+  \cellcolor{light-green}{Clustering} & \cellcolor{light-green}{MinHash Clustering} \\ \hline 
+  \cellcolor{gray}{Pattern Mining} & \cellcolor{gray}{Parallel FP Growth} \\ \hline
+  \end{tabular}
+}
+
+\section{NLP with Mahout $\to$ An Example}
+
+\subsection{Ingesting Data}
+\frame{\frametitle{Ingesting a Corpus of Documents}
+\begin{itemize}
+\item Mahout provides a number of utilities to allow one to ingest data into Hadoop in the format expected by the ML algorithms
+\item The basic pattern is 
+  \begin{itemize}
+  \item Convert the documents to SequenceFiles via the {\bf seqdirectory} command and then create a set of sparse or dense vectors using {\bf seq2sparse}
+  \item Create sparse vectors of word counts from the sequence files above with the {\bf seq2sparse} command
+  \end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Converting a Sequence File to a set of Vectors}
+\begin{itemize}
+\item Create a sparse set of vectors using the mahout utility {\bf seq2sparse}.
+\item The {\bf seq2sparse} command allows you to specify:
+  \begin{center}
+    \begin{tabular}{| l | p{7cm} |}
+    \hline
+    \texttt{-wt} & The weighting method used: tf or tfidf \\ \hline
+    \texttt{--minSupport} & The minimum number of times a term has to occur to exist in the document \\ \hline
+    \texttt{--norm} & An integer $k > 0$ indicating the $L_k$ metric to be used to normalize the vectors.\\ \hline
+    \end{tabular}
+  \end{center}
+
+\end{itemize}
+}
+
+\frame{\frametitle{Ingestion $\to$ Demo}
+\begin{center}
+\scalebox{3}{
+{\bf DEMO}
+}
+\end{center}
+}
+
+
+\subsection{Topic Models}
+
+
+\frame{\frametitle{Topic Models}
+\begin{itemize}
+\item Topic modeling is intended to find a set of broad themes or ``topics'' from a corpus of documents.
+\item Documents contain multiple topics and, indeed, can be considered a ``mixture'' of topics.
+\item Probabalistic topic modeling algorithms attempt to determine the set of topics and mixture of topics per-document in an unsupervised way.
+\item Consider a collection of newspaper articles, topics may be "sports", "politics", etc.
+\end{itemize}
+}
+
+\frame{\frametitle{High Level: Latent Dirichlet Allocation}
+\begin{itemize}
+\item Topics are determined by looking at how often words appear together in the same document
+\item Each document is associated a probability distribution over the set of topics
+\item Latent Dirichlet Allocation (LDA) is a statistical topic model which learns
+  \begin{itemize}
+  \item what the topics are
+  \item which documents employ said topics and at what distribution
+  \end{itemize}
+\end{itemize}
+}
+\frame{\frametitle{Latent Dirichlet Allocation $\to$ Example}
+\begin{itemize}
+\item Consider sentences:
+  \begin{itemize}
+  \item I like basketball and football.
+  \item Tim drank gatorade after football practice.
+  \item John drank gatorade and thinks it tastes terrible.
+  \end{itemize}
+\item For the topics:
+  \begin{itemize}
+  \item {\em Topic 1} $\to$ basketball, football
+  \item {\em Topic 2} $\to$ gatorade, drank
+  \end{itemize}
+\item And sentences:
+  \begin{itemize}
+  \item Sentence 1 is 100\% Topic 1
+  \item Sentence 3 is 100\% Topic 2
+  \item Sentence 2 is 50\% Topic 1 and 50\% Topic 2
+  \end{itemize}
+\end{itemize}
+}
+
+%TODO: Citation
+\frame{\frametitle{LDA in Mahout}
+\begin{itemize}
+\item Original implementation followed the original implementation proposed by Blei, Ng and Jordan in 2003
+  \begin{itemize}
+  \item The problem, in part, the amount of information sent out of the mappers scaled with the product of the number of terms in the vocabulary and number of topics.
+  \item On a 1 billion non-zero entry corpus, for 200 topics, original implementation sent 2.5 TB of data from the mappers {\em per iteration}.
+  \item Recently (as of 0.6 [MAHOUT-897]) moved to Collapsed Variational Bayes
+  \item About 15x faster than original implementation
+  \end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{LDA in Mahout}
+\begin{itemize}
+\item The {\bf cvb} tool will run the LDA algorithm
+\item Input: sequence file of SparseVectors of word counts weighted by term frequency
+\item Output: Topic model
+\item Parameters:
+   \begin{center}
+   \scalebox{0.8}{
+    \begin{tabular}{| l | p{10cm} |}
+    \hline
+    {\texttt -dict} & The term dictionary \\ \hline
+    {\texttt -k} & The number of topics \\ \hline
+    {\texttt -nt} & The number of unique features defined by the input document vectors \\ \hline
+    {\texttt -maxIter} & The maximum number of iterations.\\ \hline
+    {\texttt -mipd} & The maximum number of iterations per document\\ \hline
+    {\texttt -a} & Smoothing for the document topic distribution; should be about $\frac{50}{k}$, with k being the number of topics.\\ \hline
+    {\texttt -e} & Smoothing for the term topic distribution\\ \hline
+  \end{tabular}
+  }
+  \end{center}
+\end{itemize}
+}
+
+\frame{\frametitle{LDA in Mahout $\to$ Demo}
+\begin{center}
+\scalebox{3}{
+{\bf DEMO}
+}
+\end{center}
+}
+\section{Questions}
+\frame{\frametitle{Questions}
+Thanks for your attention!  Questions? \\
+\begin{itemize}
+\item Find me at http://caseystella.com 
+\item Twitter handle: @casey\_stella 
+\item Email address: cstella@hortonworks.com
+\end{itemize}
+}
+
+\end{document}

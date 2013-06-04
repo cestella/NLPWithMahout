@@ -10,3 +10,9 @@ target
 NLPWithMahout.iml
 NLPWithMahout.ipr
 NLPWithMahout.iws
+*.log
+*.aux
+*.nav
+*.out
+*.snm
+*.toc
