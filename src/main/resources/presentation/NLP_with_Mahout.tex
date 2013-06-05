@@ -29,13 +29,14 @@
 \frame{\frametitle{Introduction}
 \begin{itemize}
 \item I'm a Systems Architect at Hortonworks
-\item Prior to this, I
+\item Prior to this, I've spent my time and had a lot of fun
   \begin{itemize}
-  \item Did data mining on medical data at Explorys using the Hadoop ecosystem
-  \item Did signal processing on seismic data at Ion Geophysical using MapReduce
-  \item Was a graduate student in the Math department at Texas A\&M in algorithmic complexity theory
+  \item Doing data mining on medical data at Explorys using the Hadoop ecosystem
+  \item Doing signal processing on seismic data at Ion Geophysical using MapReduce
+  \item Being a graduate student in the Math department at Texas A\&M in algorithmic complexity theory
   \end{itemize}
 \item I'm going to talk about Natural Language Processing in the Hadoop ecosystem.
+\item I'm going to go over Apache Mahout in general and then focus on Topic Models.
 \end{itemize}
 }
 
@@ -53,19 +54,19 @@
 \end{itemize}
 }
 
-\frame{\frametitle{Classes of Algorithms Included}
-\begin{itemize}
-\item Mahout includes distributed algorithms for
-  \begin{itemize}
-  \item Classification
-  \item Clustering
-  \item Pattern Matching/Frequent Itemset Mining
-  \item Recommendation Engines/Collaborative Filtering
-  \end{itemize}
-\end{itemize}
-}
+%%\frame{\frametitle{Classes of Algorithms Included}
+%%\begin{itemize}
+%%\item Mahout includes distributed algorithms for
+%%  \begin{itemize}
+%%  \item Classification
+%%  \item Clustering
+%%  \item Pattern Matching/Frequent Itemset Mining
+%%  \item Recommendation Engines/Collaborative Filtering
+%%  \end{itemize}
+%%\end{itemize}
+%%}
 
-\frame{\frametitle{Overview of Available Algorithms}
+\frame{\frametitle{Selection of Available Algorithms}
   \begin{tabular}{| l | l | }
   \hline
   {\bf Type} & {\bf Algorithm} \\ \hline
@@ -131,7 +132,7 @@
 \item Topic modeling is intended to find a set of broad themes or ``topics'' from a corpus of documents.
 \item Documents contain multiple topics and, indeed, can be considered a ``mixture'' of topics.
 \item Probabalistic topic modeling algorithms attempt to determine the set of topics and mixture of topics per-document in an unsupervised way.
-\item Consider a collection of newspaper articles, topics may be "sports", "politics", etc.
+\item Consider a collection of newspaper articles, topics may be ``sports'', ``politics'', etc.
 \end{itemize}
 }
 
@@ -146,27 +147,76 @@
   \end{itemize}
 \end{itemize}
 }
-\frame{\frametitle{Latent Dirichlet Allocation $\to$ Example}
+
+\frame{\frametitle{Latent Dirichlet Allocation: A Parable}
+Tim is the owner of an independent record shop and is interested in finding the 
+natural genres of music by considering natural groupings based on what people buy.  
+So, Tim logs the records people buy  and who buys them.  Tim does not know the genres 
+and he doesn't know the different genres each customer likes.
+
+Tim chooses that he wants to learn $K$ genres and let a set of records define a given
+genre.  He can then assign a label to the genre by eyeballing the records in the genres.
+
 \begin{itemize}
-\item Consider sentences:
-  \begin{itemize}
-  \item I like basketball and football.
-  \item Tim drank gatorade after football practice.
-  \item John drank gatorade and thinks it tastes terrible.
-  \end{itemize}
-\item For the topics:
-  \begin{itemize}
-  \item {\em Topic 1} $\to$ basketball, football
-  \item {\em Topic 2} $\to$ gatorade, drank
-  \end{itemize}
-\item And sentences:
-  \begin{itemize}
-  \item Sentence 1 is 100\% Topic 1
-  \item Sentence 3 is 100\% Topic 2
-  \item Sentence 2 is 50\% Topic 1 and 50\% Topic 2
-  \end{itemize}
+\item Words correspond to records
+\item Documents correspond to people
+\item Topics correspond to genres and are represented by $\{records\}$.
 \end{itemize}
 }
+
+\frame{\frametitle{Latent Dirichlet Allocation: A Parable}
+Tim starts by making a guess as to why records are bought by certain people.  For
+example, he assumes that customers who buy record A have interest in the same genre
+and therefore record A must be a representative of that genre.  Of course,
+this assumption is very likely to be incorrect, so he needs to improve in the face of 
+better data.
+}
+
+\frame{\frametitle{Latent Dirichlet Allocation: A Parable}
+He comes up with the following scheme:
+\begin{itemize}
+\item Pick a record and a customer who bought that record.
+\item Guess why the record was bought by the customer.
+\item Other records that the customer bought are likely of the same genre. In other words, the more records that are bought by the same customer, the more likely that those records are part of the same genre.
+\item Make a new guess as to why the customer bought that record, choosing a genre with some probability according to how likely Tim thinks it is.
+\end{itemize}
+}
+
+\frame{\frametitle{Latent Dirichlet Allocation: A Parable}
+Tim goes through each customer purchase over and over again.  His guesses keep getting 
+better because he starts to notice patterns (i.e. people who buy the same records are 
+likely interested in the same genres).  Eventually he feels like he's refined his model
+enough and is ready to draw conclusions:
+\begin{itemize}
+\item For each genre, you can count the records assigned to that genre to figure out what records are associated with the genre.
+\item By looking at the records in the genre, you can give the genre a label.
+\item For each customer $D$ and genre $T$, you can compute the proportions of records who were bought by $D$ because they liked genre $T$.  These give you a representation of customer $D$.  For example, you might learn that records bought by Jim consist of 10\% ``Easy Listening'', ``20\% Rap'', and 70\% ``Country \& Western''.
+\end{itemize}
+
+}
+
+
+%%\frame{\frametitle{Latent Dirichlet Allocation $\to$ Example}
+%%\begin{itemize}
+%%\item Consider sentences:
+%%  \begin{itemize}
+%%  \item I like basketball and football.
+%%  \item Tim drank gatorade after football practice.
+%%  \item John drank gatorade and thinks it tastes terrible.
+%%  \end{itemize}
+%%\item For the topics:
+%%  \begin{itemize}
+%%  \item {\em Topic 1} $\to$ basketball, football
+%%  \item {\em Topic 2} $\to$ gatorade, drank
+%%  \end{itemize}
+%%\item And sentences:
+%%  \begin{itemize}
+%%  \item Sentence 1 is 100\% Topic 1
+%%  \item Sentence 3 is 100\% Topic 2
+%%  \item Sentence 2 is 50\% Topic 1 and 50\% Topic 2
+%%  \end{itemize}
+%%\end{itemize}
+%%}
 
 %TODO: Citation
 \frame{\frametitle{LDA in Mahout}
@@ -188,10 +238,9 @@
 \item Output: Topic model
 \item Parameters:
    \begin{center}
-   \scalebox{0.8}{
+   \scalebox{0.9}{
     \begin{tabular}{| l | p{10cm} |}
     \hline
-    {\texttt -dict} & The term dictionary \\ \hline
     {\texttt -k} & The number of topics \\ \hline
     {\texttt -nt} & The number of unique features defined by the input document vectors \\ \hline
     {\texttt -maxIter} & The maximum number of iterations.\\ \hline
