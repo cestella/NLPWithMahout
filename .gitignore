@@ -16,3 +16,5 @@ NLPWithMahout.iws
 *.out
 *.snm
 *.toc
+*.bbl
+*.blg

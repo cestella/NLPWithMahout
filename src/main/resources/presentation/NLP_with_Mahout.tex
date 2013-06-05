@@ -4,6 +4,8 @@
 \usepackage[T1]{fontenc}
 \usepackage{inconsolata}
 \usepackage{xcolor,colortbl}
+\usepackage[square]{natbib}
+%%\newcommand{\newblock}{}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \usetheme[pageofpages=of,% String used between the current page and the
                          % total page count.
@@ -221,11 +223,11 @@ enough and is ready to draw conclusions:
 %TODO: Citation
 \frame{\frametitle{LDA in Mahout}
 \begin{itemize}
-\item Original implementation followed the original implementation proposed by Blei, Ng and Jordan in 2003
+\item Original implementation followed the original implementation proposed by \cite{Blei:2003:LDA}.
   \begin{itemize}
   \item The problem, in part, the amount of information sent out of the mappers scaled with the product of the number of terms in the vocabulary and number of topics.
   \item On a 1 billion non-zero entry corpus, for 200 topics, original implementation sent 2.5 TB of data from the mappers {\em per iteration}.
-  \item Recently (as of 0.6 [MAHOUT-897]) moved to Collapsed Variational Bayes
+  \item Recently (as of 0.6 [MAHOUT-897]) moved to Collapsed Variational Bayes by \cite{Asuncion:2009:SIT}.
   \item About 15x faster than original implementation
   \end{itemize}
 \end{itemize}
@@ -260,14 +262,18 @@ enough and is ready to draw conclusions:
 }
 \end{center}
 }
-\section{Questions}
-\frame{\frametitle{Questions}
+\section{Questions \& Bibliography}
+\frame{\frametitle{Questions \& Bibliography}
 Thanks for your attention!  Questions? \\
 \begin{itemize}
 \item Find me at http://caseystella.com 
 \item Twitter handle: @casey\_stella 
 \item Email address: cstella@hortonworks.com
 \end{itemize}
+{\bf BIBLIOGRAPHY}
+\bibliographystyle{abbrvnat}
+\bibliography{NLP_with_Mahout}
+
 }
 
 \end{document}
