@@ -18,3 +18,4 @@ NLPWithMahout.iws
 *.toc
 *.bbl
 *.blg
+dependency-reduced-pom.xml
