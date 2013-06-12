@@ -89,6 +89,6 @@ public class Tokenizer extends org.apache.lucene.analysis.Tokenizer{
     }
 
     protected boolean includedPOS(String tag) {
-        return tag.startsWith("NN") || tag.startsWith("V") || tag.startsWith("J") || tag.startsWith("R");
+        return tag.startsWith("NN") || tag.startsWith("V");// || tag.startsWith("J") || tag.startsWith("R");
     }
 }

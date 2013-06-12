@@ -17,7 +17,7 @@ fi
 if [ $# -gt 1 ];then
   NUM_TOPICS=$2
 else
-  NUM_TOPICS=40
+  NUM_TOPICS=5
   echo "Defaulting to $NUM_TOPICS topics"
 fi
 
@@ -40,12 +40,11 @@ fi
 #
 #
 ###############################################################
-
+CWD=$(dirname $0)
 if [ $(exists_in_hadoop $BASE_DIR/data) == "false" ];then
   echo "No input data found; expected data to be in $BASE_DIR/data";
   echo "Copying data in..."
-  SCRIPT_DIR=$(dirname $0)
-  $SCRIPT_DIR/data/copy_data.sh $BASE_DIR
+  $CWD/copy_data.sh $BASE_DIR
   if [ $? -ne 0 ];then
     echo "Unable to copy data into hadoop...sorry, I have to bail."
     exit 2
@@ -83,27 +82,61 @@ fi
 
 VECTOR_FILES=$BASE_DIR/ingest/vector
 TF_VECTORS=$BASE_DIR/ingest/tf_vec
+CUSTOM_JAR=$CWD/NLPWithMahout-1.0-SNAPSHOT.jar
+
+
+CLASSPATH=${CLASSPATH}:$HADOOP_CONF_DIR
+
+CLASSPATH=${CLASSPATH}:$JAVA_HOME/lib/tools.jar
+
+# so that filenames w/ spaces are handled correctly in loops below
+IFS=
+
+
+for f in $MAHOUT_HOME/mahout-*.jar; do
+  CLASSPATH=${CLASSPATH}:$f;
+done
+
+  # add dev targets if they exist
+for f in $MAHOUT_HOME/examples/target/mahout-examples-*-job.jar $MAHOUT_HOME/mahout-examples-*-job.jar ; do
+  CLASSPATH=${CLASSPATH}:$f;
+done
+
+# add release dependencies to CLASSPATH
+for f in $MAHOUT_HOME/lib/*.jar; do
+    CLASSPATH=${CLASSPATH}:$f;
+done
+
+LIBJARS=$CUSTOM_JAR
+for f in $MAHOUT_HOME/mahout-*.jar;do
+  LIBJARS=${LIBJARS},$f;
+done
 
 if [ $(exists_in_hadoop $VECTOR_FILES) == "true" ];then
   echo "Vector files already exist in hadoop, skipping..."
 else
   echo "Converting input documents to sequence files"
-  $MAHOUT_HOME/bin/mahout seq2sparse -i "$SEQUENCE_FILES"\
+  #$MAHOUT_HOME/bin/mahout seq2sparse -libjars $CUSTOM_JAR\
+  export HADOOP_CLASSPATH=$MAHOUT_CONF_DIR:${HADOOP_CLASSPATH}:$CLASSPATH
+  $HADOOP_HOME/bin/hadoop jar $CUSTOM_JAR com.caseystella.ingest.SparseVectorsFromSequenceFiles\
+                                     -libjars $LIBJARS\
+                                     -a com.caseystella.nlp.Analyzer\
+                                     -i "$SEQUENCE_FILES"\
                                      -o "$VECTOR_FILES"\
+                                     -x 65\
                                      -wt tf\
                                      -seq\
-                                     -nr 3\
-                                     --namedVector\
+                                     -ow\
 &&\
   $MAHOUT_HOME/bin/mahout rowid -i $VECTOR_FILES/tf-vectors\
                                 -o $TF_VECTORS
+ unset HADOOP_CLASSPATH
  if [ $? -ne 0 ];then
    echo "Unable to convert sequence files to vectors...";
    exit 2
  fi
  echo "Created vector files $SEQUENCE_FILES -> $VECTOR_FILES"
 fi
-
 DICTIONARY=$VECTOR_FILES/dictionary.file-0
 
 ################################################################
@@ -124,11 +157,13 @@ else
   $MAHOUT_HOME/bin/mahout cvb -i $TF_VECTORS/matrix\
                               -o $LDA_TOPIC_TERMS\
                               -k $NUM_TOPICS\
-                              --maxIter 10\
+                              --maxIter 20\
                               -seed 0\
                               -ow\
                               -dict $DICTIONARY\
                               -dt $LDA_DOC_TOPIC\
+                              -mipd 50\
+                              -ntt 1\
                               -mt $LDA_MODEL
                               #-nt $TERM_COUNT\
                               #-tf .2
@@ -143,6 +178,7 @@ i=1
 IFS=$'\n';for line in $($MAHOUT_HOME/bin/mahout vectordump -i $LDA_TOPIC_TERMS --dictionary $DICTIONARY --vectorSize 4 --dictionaryType sequencefile | grep "^{");do
   echo "Topic $i" 
   echo $line | ./prettyprint.sh 10
+#  echo $line | ./prettyprint.sh 10 > topics/$i.dat
   echo "============================="
   echo ""
   i=`expr $i + 1`

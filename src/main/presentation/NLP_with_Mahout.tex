@@ -1,6 +1,7 @@
 \documentclass{beamer}
 \usepackage{beamerthemesplit}
 \usepackage{multirow}
+\usepackage{hyperref}
 \usepackage[T1]{fontenc}
 \usepackage{inconsolata}
 \usepackage{xcolor,colortbl}
@@ -40,6 +41,14 @@
 \item I'm going to talk about Natural Language Processing in the Hadoop ecosystem.
 \item I'm going to go over Apache Mahout in general and then focus on Topic Models.
 \end{itemize}
+}
+
+\frame{\frametitle{Natural Language Processing}
+Peter Norvig, the Director of Research at Google, said in the Amazon book review for the book ``Statistical Natural Language Processing''\footnote{http://www.amazon.com/review/R3GSYXSKRU8V17}
+by Manning and Schuetze 
+\begin{quote}
+If someone told me I had to make a million bucks in one year, and I could only refer to one book to do it, I'd grab a copy of this book and start a web text-processing company.
+\end{quote}
 }
 
 \section{Mahout $\to$ An Overview}
@@ -115,14 +124,6 @@
   \end{center}
 
 \end{itemize}
-}
-
-\frame{\frametitle{Ingestion $\to$ Demo}
-\begin{center}
-\scalebox{3}{
-{\bf DEMO}
-}
-\end{center}
 }
 
 
@@ -220,7 +221,6 @@ enough and is ready to draw conclusions:
 %%\end{itemize}
 %%}
 
-%TODO: Citation
 \frame{\frametitle{LDA in Mahout}
 \begin{itemize}
 \item Original implementation followed the original implementation proposed by \cite{Blei:2003:LDA}.
@@ -230,6 +230,19 @@ enough and is ready to draw conclusions:
   \item Recently (as of 0.6 [MAHOUT-897]) moved to Collapsed Variational Bayes by \cite{Asuncion:2009:SIT}.
   \item About 15x faster than original implementation
   \end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{LDA in Mahout}
+\begin{itemize}
+\item Input data is expected to be a sparse vector
+\item Ingestion Pipeline from a document directory
+  \begin{itemize}
+  \item {\bf seqdirectory} $\to$ Transforms docs to a sequence file containing a document per entry
+  \item {\bf seq2sparse} $\to$ Transforms to a sequence file of sparse vectors as well as a dictionary of terms
+  \item {\bf rowid} $\to$  Transforms the set of vectors into a matrix
+  \end{itemize}
+\item LDA expects the matrix as input as well as the dictionary
 \end{itemize}
 }
 
@@ -255,11 +268,24 @@ enough and is ready to draw conclusions:
 \end{itemize}
 }
 
-\frame{\frametitle{LDA in Mahout $\to$ Demo}
+\frame{\frametitle{LDA in Mahout $\to$ Topics}
 \begin{center}
-\scalebox{3}{
-{\bf DEMO}
-}
+   \scalebox{0.85}{
+  \begin{tabular}{| l | l | l | l | l | }
+  \hline
+  {\bf Topic 1} & {\bf Topic 2} & {\bf Topic 3} & {\bf Topic 4} & {\bf Topic 5} \\ \hline
+\color{red}{bush}&\color{red}{sharon}&\color{red}{sharon}&\color{red}{sharon}&\color{red}{sharon} \\ \hline
+\color{red}{election}&administration&\color{red}{disengagement}&bush&\color{red}{disengagement}\\ \hline
+palestinians&\color{red}{bush}&administration&administration&us\\ \hline
+hand&us&election&\color{red}{settlement}&bush\\ \hline
+year&\color{red}{endorse}&state&\color{red}{plan}&\color{red}{ west}\\ \hline
+\color{red}{fence}&leader&bush&palestinians&election\\ \hline
+roadmap&iraq&hand&disengagement&solution\\ \hline
+arafat&year&\color{red}{ conflict}&solution&hand\\ \hline
+have&election&year&election&day\\ \hline
+conflict&transfer&us&fence&year\\ \hline
+  \end{tabular}
+  }
 \end{center}
 }
 \section{Questions \& Bibliography}

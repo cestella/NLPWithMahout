@@ -56,8 +56,8 @@ public class Analyzer extends StopwordAnalyzerBase
                 "for", "if", "in", "into", "is", "it",
                 "no", "not", "of", "on", "or", "such",
                 "that", "the", "their", "then", "there", "these",
-                "they", "this", "to", "was", "will", "with",
-                "the",
+                "they", "this", "to", "was", "will", "with"
+                /*"the",
                 "of",
                 "to",
                 "and",
@@ -163,7 +163,11 @@ public class Analyzer extends StopwordAnalyzerBase
                 "election",
                 "us",
                 "disengagement",
-                "fence"
+                "fence",
+                "israeli-palestinian",
+                "up",
+                "administration",
+                "roadmap"*/
 
                 );
         final CharArraySet stopSet = new CharArraySet(Version.LUCENE_CURRENT,
@@ -173,7 +177,8 @@ public class Analyzer extends StopwordAnalyzerBase
     }
     @Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
-        final Tokenizer src = new Tokenizer(reader);
+        //final StandardTokenizer src = new StandardTokenizer(Version.LUCENE_36, reader);
+        Tokenizer src = new Tokenizer(reader);
         TokenStream tok = new StandardFilter(matchVersion, src);
         tok = new LowerCaseFilter(matchVersion, tok);
         tok = new StopFilter(matchVersion, tok, stopwords);
