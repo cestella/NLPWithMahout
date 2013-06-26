@@ -104,8 +104,9 @@ If someone told me I had to make a million bucks in one year, and I could only r
 \item Mahout provides a number of utilities to allow one to ingest data into Hadoop in the format expected by the ML algorithms
 \item The basic pattern is 
   \begin{itemize}
-  \item Convert the documents to SequenceFiles via the {\bf seqdirectory} command and then create a set of sparse or dense vectors using {\bf seq2sparse}
-  \item Create sparse vectors of word counts from the sequence files above with the {\bf seq2sparse} command
+  \item Convert the documents to SequenceFiles via the {\bf seqdirectory} command
+  \item Convert those sequence files to a set of sparse vectors using {\bf seq2sparse} by computing a dictionary, assigning integers for words, computing feature weights and creating a vector for each document using the word-integer mapping and feature-weight.
+  \item Convert the keys of associated with the sparse vectors to incrementing integers using the {\bf rowid} command
   \end{itemize}
 \end{itemize}
 }
@@ -120,6 +121,7 @@ If someone told me I had to make a million bucks in one year, and I could only r
     \texttt{-wt} & The weighting method used: tf or tfidf \\ \hline
     \texttt{--minSupport} & The minimum number of times a term has to occur to exist in the document \\ \hline
     \texttt{--norm} & An integer $k > 0$ indicating the $L_k$ metric to be used to normalize the vectors.\\ \hline
+    \texttt{-a} & The analyzer to use.\\ \hline
     \end{tabular}
   \end{center}
 
@@ -240,7 +242,7 @@ enough and is ready to draw conclusions:
   \begin{itemize}
   \item {\bf seqdirectory} $\to$ Transforms docs to a sequence file containing a document per entry
   \item {\bf seq2sparse} $\to$ Transforms to a sequence file of sparse vectors as well as a dictionary of terms
-  \item {\bf rowid} $\to$  Transforms the set of vectors into a matrix
+  \item {\bf rowid} $\to$  Transforms the keys of the sparse vectors into integers 
   \end{itemize}
 \item LDA expects the matrix as input as well as the dictionary
 \end{itemize}

@@ -1,7 +1,7 @@
 NLP With Mahout
 =============
 This repository is intended to provide a working example of using
-the Latent Dirichlet Allocation library from Mahout.  This work was
+the Latent Dirichlet Allocation implementation from Mahout.  This work was
 presented at the Hadoop Summit 2013 in San Jose, California.  You can
 find the presentation
 [here](https://github.com/cestella/NLPWithMahout/blob/master/src/main/presentation/NLP_with_Mahout.pdf?raw=true).
