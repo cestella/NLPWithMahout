@@ -3,11 +3,13 @@ NLP With Mahout
 This repository is intended to provide a working example of using
 the Latent Dirichlet Allocation library from Mahout.  This work was
 presented at the Hadoop Summit 2013 in San Jose, California.  You can
-find the presentation at src/main/presentation/NLP_with_Mahout.pdf
+find the presentation
+[here](https://github.com/cestella/NLPWithMahout/blob/master/src/main/presentation/NLP_with_Mahout.pdf?raw=true).
 
 Details
 =========
-The data presented here comes from the bitterlemons corpus.  This data
+The data presented here comes from the [bitterlemons
+corpus](https://sites.google.com/site/weihaolinatcmu/data).  This data
 contains blog post entries about the Israeli and Palestinian crisis from
 the early 2000s.
 
@@ -15,7 +17,8 @@ Running the "mvn clean verify" command will prep the data and code in
 the target/landing directory.  You should copy this directory to your
 gateway node (i.e. a node where the hadoop client is installed).
 
-The driver program (src/main/bash/ingest.sh) will upload the data from
+The [driver
+program](https://github.com/cestella/NLPWithMahout/blob/master/src/main/bash/ingest_data.sh) will upload the data from
 the access node to HDFS as well as running the training.  On the
 Hortonworks Sandbox VM instance running in VMWare on my Macbook 
 pro, this takes approximately 30 minutes.  At the end, it will output
